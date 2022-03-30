@@ -23,7 +23,7 @@ const viewEmployees = () => {
     })
 }
 
-const setManager = (employeeId) => {
+const setEmployeeManager = (employeeId) => {
     db.query(`
     SELECT
     id AS value, 
@@ -51,7 +51,7 @@ const setManager = (employeeId) => {
     });
 };
 
-function setRole (employeeID) {
+function setEmployeeRole (employeeID) {
     db.query(`
     SELECT
     id AS value,
@@ -71,7 +71,7 @@ function setRole (employeeID) {
                     //   console.log(result);
                     db.query('SELECT * FROM employee', (err, employees) => {
                         // console.log(employees);
-                        setManager(employeeID);
+                        setEmployeeManager(employeeID);
                     });
                 })
         })
@@ -97,7 +97,7 @@ function addEmployee() {
             [answers.first, answers.last, 1],
             (err, result) => {
                 // console.log(result.insertId);
-                setRole(result.insertId);
+                setEmployeeRole(result.insertId);
             }
         );
     }
