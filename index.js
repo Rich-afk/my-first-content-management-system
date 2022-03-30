@@ -94,9 +94,6 @@ function addEmployee() {
     );
 };
 
-function getRole() {
-
-}
 
 function getSwitchRole(employeeID) {
     db.query(`
@@ -115,10 +112,6 @@ function getSwitchRole(employeeID) {
                 'UPDATE employee SET role_id = ? WHERE id = ?',
                 [answer.role, employeeID],
                 (err, result) => {
-                    //   console.log(result);
-                    db.query('SELECT * FROM employee', (err, employees) => {
-                        // console.log(employees);
-                    });
                     init();
                 })
         })
@@ -138,6 +131,7 @@ function updateEmployee() {
             name: 'employee',
             choices: employees
         }).then((answer) => {
+            // console.log(answer.employee);
             getSwitchRole(answer.employee);
         })
     });
@@ -201,7 +195,7 @@ const setDepartment = (departmentId) => {
                 'UPDATE role SET department_id = ? WHERE id = ?',
                 [answers.department, departmentId],
                 (err, result) => {
-                    console.log(result);
+                    // console.log(result);
                     db.query('SELECT * FROM role', (err, roles) => {
                         //   console.log(roles);
                     });
