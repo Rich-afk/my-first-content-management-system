@@ -51,6 +51,33 @@ const setManager = (employeeId) => {
     });
 };
 
+function setRole (employeeID) {
+    db.query(`
+    SELECT
+    id AS value,
+    title AS name
+    FROM role
+    `, (err, roles) => {
+        inquirer.prompt({
+            type: 'rawlist',
+            message: 'Which role is your employee?',
+            name: 'role',
+            choices: roles
+        }).then((answers) => {
+            db.query(
+                'UPDATE employee SET role_id = ? WHERE id = ?',
+                [answers.role, employeeID],
+                (err, result) => {
+                    //   console.log(result);
+                    db.query('SELECT * FROM employee', (err, employees) => {
+                        // console.log(employees);
+                        setManager(employeeID);
+                    });
+                })
+        })
+    });
+};
+
 function addEmployee() {
     inquirer.prompt(
         [
@@ -65,29 +92,12 @@ function addEmployee() {
         ]
     ).then((answers) => {
         const roleID = 0;
-        db.query(`
-        SELECT
-        id AS value,
-        title AS name
-        FROM role
-        `, (err, roles) => {
-            inquirer.prompt({
-                type: 'rawlist',
-                message: 'Which role is your employee?',
-                name: 'role',
-                choices: roles
-            }).then((answer) => {
-                // console.log(answer.role);
-                roleID = answer.role;
-            })
-        }
-        )
         db.query(
             'INSERT INTO employee (first_name, last_name, role_id) VALUES (?,?,?)',
-            [answers.first, answers.last, roleID],
+            [answers.first, answers.last, 1],
             (err, result) => {
                 // console.log(result.insertId);
-                setManager(result.insertId);
+                setRole(result.insertId);
             }
         );
     }
@@ -195,10 +205,6 @@ const setDepartment = (departmentId) => {
                 'UPDATE role SET department_id = ? WHERE id = ?',
                 [answers.department, departmentId],
                 (err, result) => {
-                    // console.log(result);
-                    db.query('SELECT * FROM role', (err, roles) => {
-                        //   console.log(roles);
-                    });
                     init();
                 })
         })
